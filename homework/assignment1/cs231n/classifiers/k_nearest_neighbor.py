@@ -87,14 +87,11 @@ class KNearestNeighbor(object):
     dists = np.zeros((num_test, num_train))
     for i in range(num_test):
       #######################################################################
-      # TODO:                                                               #
       # Compute the l2 distance between the ith test point and all training #
       # points, and store the result in dists[i, :].                        #
       #######################################################################
-      pass
-      #######################################################################
-      #                         END OF YOUR CODE                            #
-      #######################################################################
+      dists[i] = np.sqrt(np.sum(np.square(X[i,:] - self.X_train), axis=1))
+
     return dists
 
   def compute_distances_no_loops(self, X):
@@ -108,7 +105,6 @@ class KNearestNeighbor(object):
     num_train = self.X_train.shape[0]
     dists = np.zeros((num_test, num_train)) 
     #########################################################################
-    # TODO:                                                                 #
     # Compute the l2 distance between all test points and all training      #
     # points without using any explicit loops, and store the result in      #
     # dists.                                                                #
@@ -119,10 +115,14 @@ class KNearestNeighbor(object):
     # HINT: Try to formulate the l2 distance using matrix multiplication    #
     #       and two broadcast sums.                                         #
     #########################################################################
-    pass
-    #########################################################################
-    #                         END OF YOUR CODE                              #
-    #########################################################################
+    dists = np.multiply(np.dot(X, self.X_train.T), -2)
+    sq1 = np.sum(np.square(X), axis=1, keepdims=True)
+    sq2 = np.sum(np.square(self.X_train), axis=1)
+    dists = np.add(dists, sq1)
+    dists = np.add(dists, sq2)
+    dists = np.sqrt(dists)
+
+
     return dists
 
   def predict_labels(self, dists, k=1):
